@@ -18,23 +18,15 @@ abstract class Task extends \yii\base\Component
     public $active = true;
     public $overdueThreshold = 3600;
 
+    /**
+     * @var \webtoolsnz\scheduler\models
+     */
     private $_model;
 
     /**
      * @return mixed
      */
     abstract public function run();
-
-    /**
-     *
-     */
-    public function init()
-    {
-        parent::init();
-
-        //$model = SchedulerTask::createTaskModel($this);
-        //$this->setModel($model);
-    }
 
     /**
      * @param string|\DateTime $currentTime
@@ -64,7 +56,7 @@ abstract class Task extends \yii\base\Component
     }
 
     /**
-     * @return /webtoolsnz/scheduler/models/SchedulerTask
+     * @return \webtoolsnz\scheduler\models\SchedulerTask
      */
     public function getModel()
     {
