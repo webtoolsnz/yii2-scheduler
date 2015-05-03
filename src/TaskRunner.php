@@ -48,7 +48,7 @@ class TaskRunner extends \yii\base\Component
         $this->errorSetup();
         $task = $this->getTask();
 
-        if($task->shouldRun($forceRun)) {
+        if ($task->shouldRun($forceRun)) {
             $task->start();
             ob_start();
             $task->run();
@@ -67,19 +67,19 @@ class TaskRunner extends \yii\base\Component
      */
     public function errorSetup()
     {
-        set_error_handler(function ($errorNumber, $errorText, $errorFile, $errorLine ) {
+        set_error_handler(function($errorNumber, $errorText, $errorFile, $errorLine ) {
             throw new \ErrorException($errorText, 0, $errorNumber, $errorFile, $errorLine);
         });
 
-        set_exception_handler(function ($e) {
-            $this->getTask->getModel()->stop();
+        set_exception_handler(function($e) {
+            $this->getTask()->getModel()->stop();
             echo $this->errorSummary($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
             $this->error = true;
             $this->log(ob_get_contents());
             ob_end_clean();
         });
 
-        register_shutdown_function(function () {
+        register_shutdown_function(function() {
             $error = error_get_last();
 
             if ($error) {
@@ -109,7 +109,7 @@ class TaskRunner extends \yii\base\Component
      * Note the error property is also set to 1 if this handler is fired, this is propagated into the
      * log record to indicate an error occured when the task executed
      *
-     * @return true
+     * @return string
      */
     public function errorSummary($errorno, $errorstr, $errorfile, $errorline)
     {
