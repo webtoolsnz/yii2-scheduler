@@ -73,8 +73,6 @@ class SchedulerController extends Controller
             $runner->runTask();
             echo 'done'.PHP_EOL;
         }
-
-        //var_dump($this);
     }
 
 
