@@ -30,7 +30,7 @@ class SchedulerTask extends \webtoolsnz\scheduler\models\base\SchedulerTask
      * @param $task
      * @return array|null|SchedulerTask|\yii\db\ActiveRecord
      */
-    public static function createTaskModel( $task)
+    public static function createTaskModel($task)
     {
         $model = SchedulerTask::find()
             ->where(['name' => $task->getName()])
