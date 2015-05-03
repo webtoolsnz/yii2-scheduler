@@ -3,6 +3,7 @@ namespace webtoolsnz\scheduler;
 
 use Yii;
 use yii\base\BootstrapInterface;
+use webtoolsnz\scheduler\models\SchedulerTask;
 
 /**
  * Class Module
@@ -79,7 +80,10 @@ class Module extends \yii\base\Module implements BootstrapInterface
     public function loadTask($className)
     {
         $className = implode('\\', [$this->taskNameSpace, $className]);
-        return Yii::createObject($className);
+        $task = Yii::createObject($className);
+        $task->setModel(SchedulerTask::createTaskModel($task));
+
+        return $task;
     }
 
 
