@@ -3,41 +3,63 @@ namespace webtoolsnz\scheduler;
 
 use webtoolsnz\scheduler\models\SchedulerLog;
 
+/**
+ * Class TaskRunner
+ *
+ * @package webtoolsnz\scheduler
+ * @property \webtoolsnz\scheduler\Task $task
+ */
 class TaskRunner extends \yii\base\Component
 {
+    /**
+     * Indicates whether an error occured during the executing of the task.
+     * @var bool
+     */
     public $error;
+
+    /**
+     * The task that will be executed.
+     *
+     * @var \webtoolsnz\scheduler\Task
+     */
     private $_task;
 
+    /**
+     * @param Task $task
+     */
     public function setTask(Task $task)
     {
         $this->_task = $task;
     }
 
+    /**
+     * @return Task
+     */
     public function getTask()
     {
         return $this->_task;
     }
 
     /**
-     * @param Task $task
      * @param bool $forceRun
      */
     public function runTask($forceRun = false)
     {
         $this->errorSetup();
+        $task = $this->getTask();
 
-        if($this->task->shouldRun($forceRun)) {
-            $this->task->start();
+        if($task->shouldRun($forceRun)) {
+            $task->start();
             ob_start();
-            $this->task->run();
+            $task->run();
             $output = ob_get_contents();
             ob_end_clean();
-            $this->task->stop();
+            $task->stop();
             $this->log($output);
         }
 
         $this->errorTearDown();
-        $this->task->model->save();
+        $task->getModel()->save();
     }
 
     /**
@@ -50,7 +72,7 @@ class TaskRunner extends \yii\base\Component
         });
 
         set_exception_handler(function ($e) {
-            $this->task->getModel()->stop();
+            $this->getTask->getModel()->stop();
             echo $this->errorSummary($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
             $this->error = true;
             $this->log(ob_get_contents());
@@ -61,7 +83,7 @@ class TaskRunner extends \yii\base\Component
             $error = error_get_last();
 
             if ($error) {
-                $this->task->getModel()->stop();
+                $this->getTask()->getModel()->stop();
                 $this->error = true;
                 echo $this->errorSummary($error['type'], $error['message'], $error['file'], $error['line']);
                 $this->log(ob_get_contents());
@@ -102,6 +124,9 @@ class TaskRunner extends \yii\base\Component
         return $summary;
     }
 
+    /**
+     * @param string $output
+     */
     public function log($output)
     {
         $model = $this->getTask()->getModel();
