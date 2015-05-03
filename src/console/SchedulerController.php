@@ -52,7 +52,7 @@ class SchedulerController extends Controller
                 $model->schedule,
                 is_null($model->last_run) ? 'NULL' : $model->last_run,
                 $model->next_run,
-                $model->status
+                $model->getStatus()
             );
 
             $color = isset($this->_statusColors[$model->status_id]) ? $this->_statusColors[$model->status_id] : null;
