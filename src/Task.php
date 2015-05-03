@@ -13,9 +13,32 @@ use Cron\CronExpression;
  */
 abstract class Task extends \yii\base\Component
 {
+    /**
+     * Brief description of the task.
+     *
+     * @var String
+     */
     public $description;
+
+    /**
+     * The cron expression that determines how often this task should run.
+     *
+     * @var String
+     */
     public $schedule;
+
+    /**
+     * Active flag allows you to set the task to inactive (meaning it will not run)
+     *
+     * @var bool
+     */
     public $active = true;
+
+    /**
+     * How many seconds after due date to wait until the task becomes overdue.
+     *
+     * @var int
+     */
     public $overdueThreshold = 3600;
 
     /**
@@ -24,6 +47,9 @@ abstract class Task extends \yii\base\Component
     private $_model;
 
     /**
+     * The main method that gets invoked whenever a task is ran, any errors that occur
+     * inside this method will be captured by the TaskRunner and logged against the task.
+     *
      * @return mixed
      */
     abstract public function run();
