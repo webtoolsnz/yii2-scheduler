@@ -1,0 +1,33 @@
+{
+  "name": "webtoolsnz/yii2-scheduler",
+  "description": "A scheduled task runner for Yii2 applications",
+  "keywords": ["yii2", "cron", "scheduler", "task"],
+  "type": "yii2-extension",
+  "license": "proprietary",
+  "homepage": "https://bitbucket.org/webtoolsnz/yii2-scheduler",
+  "authors": [
+    {
+      "name": "Byron Adams",
+      "email": "byron@webtools.co.nz"
+    },
+    {
+      "name": "Webtools Ltd",
+      "email": "support@webtools.co.nz",
+      "homepage": "http://www.webtools.co.nz",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0.0",
+    "mtdowling/cron-expression": "~1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "webtoolsnz\\scheduler\\": "src",
+      "webtoolsnz\\scheduler\\tests\\": "tests"
+    }
+  }
+}
