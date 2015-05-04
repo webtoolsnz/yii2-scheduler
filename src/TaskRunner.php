@@ -78,8 +78,7 @@ class TaskRunner extends \yii\base\Component
 
         register_shutdown_function(function() {
             if (null !== ($error = error_get_last())) {
-                list($errorCode, $errorMessage, $errorFile, $errorLine) = $error;
-                $this->handleError($errorCode, $errorMessage, $errorFile, $errorLine);
+                $this->handleError($error['type'], $error['message'], $error['file'], $error['line']);
             }
         });
     }

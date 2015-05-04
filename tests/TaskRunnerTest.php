@@ -22,12 +22,10 @@ class TaskRunnerTest extends \PHPUnit_Framework_TestCase
     {
         $runner = new TaskRunner();
         $runner->errorSetup();
-
-        $badCode = '$foo->bar();';
         $e = null;
 
         try {
-            eval($badCode);
+            eval('echo $foo;');
         } catch (\ErrorException $e) {
 
         }
@@ -36,5 +34,6 @@ class TaskRunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $e->getLine());
         $this->assertEquals(0, $e->getCode());
 
+        $runner->errorTearDown();
     }
 }
