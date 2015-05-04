@@ -55,7 +55,6 @@ class TaskTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-
     /**
      * @dataProvider shouldRunProvider
      */
@@ -87,7 +86,26 @@ class TaskTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
+    public function testWriteLine()
+    {
+        $task = new AlphabetTask();
 
+        ob_start();
+        $task->writeLine('test');
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals("test\n", $output);
+    }
+
+    public function testGetSetModel()
+    {
+        $task = new AlphabetTask();
+        $model = new \stdClass();
+
+        $task->setModel($model);
+        $this->assertEquals($model, $task->getModel());
+    }
 
 
 }
