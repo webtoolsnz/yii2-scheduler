@@ -82,7 +82,7 @@ abstract class Task extends \yii\base\Component
     }
 
     /**
-     * @return \webtoolsnz\scheduler\models\SchedulerTask
+     * @return $models
      */
     public function getModel()
     {
