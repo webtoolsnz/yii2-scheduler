@@ -63,39 +63,29 @@ class TaskRunner extends \yii\base\Component
     }
 
     /**
-     *
+     * Register custom error handlers so any errors that occur in a task will be captured and
+     * logged against the task, and not prevent other tasks from running.
      */
     public function errorSetup()
     {
-        set_error_handler(function($errorNumber, $errorText, $errorFile, $errorLine ) {
+        set_error_handler(function($errorNumber, $errorText, $errorFile, $errorLine) {
             throw new \ErrorException($errorText, 0, $errorNumber, $errorFile, $errorLine);
         });
 
         set_exception_handler(function($e) {
-            $this->getTask()->getModel()->stop();
-            echo $this->errorSummary($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
-            $this->error = true;
-            $this->log(ob_get_contents());
-            ob_end_clean();
+            $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
         });
 
         register_shutdown_function(function() {
-            $error = error_get_last();
-
-            if ($error) {
-                $this->getTask()->getModel()->stop();
-                $this->error = true;
-                echo $this->errorSummary($error['type'], $error['message'], $error['file'], $error['line']);
-                $this->log(ob_get_contents());
-                ob_end_clean();
+            if (null !== ($error = error_get_last())) {
+                list($errorCode, $errorMessage, $errorFile, $errorLine) = $error;
+                $this->handleError($errorCode, $errorMessage, $errorFile, $errorLine);
             }
-
-            exit;
         });
     }
 
     /**
-     *
+     * Restore the default error handlers.
      */
     public function errorTearDown()
     {
@@ -104,24 +94,24 @@ class TaskRunner extends \yii\base\Component
     }
 
     /**
-     * Custom Error handler for PHP errors, we only assign this right before running a task and then unassign the handler,
-     * this is done to capture any fatal errors and insert them into the log record for the given task.
-     * Note the error property is also set to 1 if this handler is fired, this is propagated into the
-     * log record to indicate an error occured when the task executed
-     *
-     * @return string
+     * @param $code
+     * @param $message
+     * @param $file
+     * @param $lineNumber
      */
-    public function errorSummary($errorno, $errorstr, $errorfile, $errorline)
+    public function handleError($code, $message, $file, $lineNumber)
     {
-        $summary = '';
-        $summary .= sprintf('ERROR: %s %s', $errorno, PHP_EOL);
-        $summary .= sprintf('ERROR FILE: %s %s', $errorfile, PHP_EOL);
-        $summary .= sprintf('ERROR LINE: %s %s', $errorline, PHP_EOL);
-        $summary .= sprintf('ERROR MESSAGE: %s %s', $errorstr, PHP_EOL);
+        echo sprintf('ERROR: %s %s', $code, PHP_EOL);
+        echo sprintf('ERROR FILE: %s %s', $message, PHP_EOL);
+        echo sprintf('ERROR LINE: %s %s', $file, PHP_EOL);
+        echo sprintf('ERROR MESSAGE: %s %s', $lineNumber, PHP_EOL);
+
+        $output = ob_get_contents();
+        ob_end_clean();
 
         $this->error = true;
-
-        return $summary;
+        $this->getTask()->getModel()->stop();
+        $this->log($output);
     }
 
     /**
