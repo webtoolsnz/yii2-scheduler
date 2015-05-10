@@ -6,7 +6,7 @@ use \webtoolsnz\scheduler\tests\tasks\AlphabetTask;
 use \webtoolsnz\scheduler\models\SchedulerTask;
 
 
-class TaskTest extends \PHPUnit_Framework_TestCase
+class TaskTest extends \webtoolsnz\scheduler\tests\TestCase
 {
     public function testStartStop()
     {

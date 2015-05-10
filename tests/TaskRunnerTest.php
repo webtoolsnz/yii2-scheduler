@@ -5,7 +5,6 @@ namespace webtoolsnz\scheduler\tests;
 use \webtoolsnz\scheduler\tests\tasks\AlphabetTask;
 use \webtoolsnz\scheduler\TaskRunner;
 
-
 class TaskRunnerTest extends \PHPUnit_Framework_TestCase
 {
     public function testSetGetTask()
@@ -35,5 +34,13 @@ class TaskRunnerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $e->getCode());
 
         $runner->errorTearDown();
+    }
+
+    public function testTest()
+    {
+
+
+
+
     }
 }
