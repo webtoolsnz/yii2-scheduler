@@ -98,7 +98,7 @@ abstract class Task extends \yii\base\Component
     }
 
     /**
-     *
+     * Mark the task as started
      */
     public function start()
     {
@@ -107,6 +107,9 @@ abstract class Task extends \yii\base\Component
         $model->save(false);
     }
 
+    /**
+     * Mark the task as stopped.
+     */
     public function stop()
     {
         $model = $this->getModel();
