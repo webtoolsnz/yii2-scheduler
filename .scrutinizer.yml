@@ -3,9 +3,9 @@ build:
         php: '5.4.28'
     cache:
         directories:
-            - '/home/scrutinizer/.composer'
+            - '/home/scrutinizer/.composer/'
     dependencies:
-            before:
+            before: 
               - composer global require "codeception/codeception:2.0.*@dev"
               - composer global require "fxp/composer-asset-plugin:~1.0"
     project_setup:
