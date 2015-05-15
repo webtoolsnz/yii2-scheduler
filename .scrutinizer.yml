@@ -1,14 +1,13 @@
 build:
     environment:
         php: '5.4.28'
+    dependencies:
+            before:
+              - composer global require "codeception/codeception:2.0.*@dev"
+              - composer global require "fxp/composer-asset-plugin:~1.0"
     project_setup:
         before:
-            - composer global require "codeception/codeception:2.0.*@dev"
-            - composer global require "fxp/composer-asset-plugin:~1.0"
-            - composer install
             - mysql -e "CREATE DATABASE scheduler_test;"
-            - mysql -e "CREATE USER 'scheduler_test'@'localhost' IDENTIFIED BY 'scheduler_test';"
-            - mysql -e "GRANT ALL PRIVILEGES ON scheduler_test.* TO scheduler_test@localhost;"
             - cd tests
             - php codeception/_app/yii migrate/up --interactive=0
 
