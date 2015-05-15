@@ -8,9 +8,13 @@ build:
     project_setup:
         before:
             - mysql -e "CREATE DATABASE scheduler_test;"
+            - php tests/codeception/_app/yii migrate/up --interactive=0
+    tests:
+        before:
             - cd tests
-            - php codeception/_app/yii migrate/up --interactive=0
-
+            - ~/.composer/vendor/bin/codecept build
+        override:
+            - ~/.composer/vendor/bin/codecept run
 
 filter:
     excluded_paths: [tests/*, src/models/base/*]
