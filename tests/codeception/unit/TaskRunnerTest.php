@@ -4,8 +4,9 @@ namespace webtoolsnz\scheduler\tests;
 
 use \webtoolsnz\scheduler\tests\tasks\AlphabetTask;
 use \webtoolsnz\scheduler\TaskRunner;
+use \yii\codeception\TestCase;
 
-class TaskRunnerTest extends \PHPUnit_Framework_TestCase
+class TaskRunnerTest extends TestCase
 {
     public function testSetGetTask()
     {

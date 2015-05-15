@@ -3,13 +3,13 @@
 namespace webtoolsnz\scheduler\tests;
 
 use Yii;
+use \yii\codeception\TestCase;
 
 
-class ModuleTest extends \PHPUnit_Framework_TestCase
+class ModuleTest extends TestCase
 {
     public function testGetTasks()
     {
-
         $module = Yii::createObject([
             'class' => '\webtoolsnz\scheduler\Module',
             'taskPath' => '@tests/tasks',

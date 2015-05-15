@@ -22,7 +22,11 @@
     "mtdowling/cron-expression": "~1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.0"
+    "phpunit/phpunit": "~4.0",
+    "yiisoft/yii2-codeception": "~2.0",
+    "codeception/specify": "*",
+    "codeception/verify": "*",
+    "codeception/aspect-mock": "*"
   },
   "autoload": {
     "psr-4": {

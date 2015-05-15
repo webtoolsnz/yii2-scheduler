@@ -81,7 +81,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     {
         $className = implode('\\', [$this->taskNameSpace, $className]);
         $task = Yii::createObject($className);
-        //$task->setModel(SchedulerTask::createTaskModel($task));
+        $task->setModel(SchedulerTask::createTaskModel($task));
 
         return $task;
     }

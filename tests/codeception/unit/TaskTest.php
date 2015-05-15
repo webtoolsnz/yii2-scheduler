@@ -4,15 +4,23 @@ namespace webtoolsnz\scheduler\tests;
 
 use \webtoolsnz\scheduler\tests\tasks\AlphabetTask;
 use \webtoolsnz\scheduler\models\SchedulerTask;
+use \yii\codeception\TestCase;
+use \AspectMock\Test as test;
 
 
-class TaskTest extends \webtoolsnz\scheduler\tests\TestCase
+class TaskTest extends TestCase
 {
+    protected function tearDown()
+    {
+        // remove all registered test doubles
+        test::clean();
+    }
+
     public function testStartStop()
     {
-        $model = $this->getMockBuilder('\SchedulerTask')
-                ->setMethods(['save'])
-                ->getMock();
+        $model = test::double(new SchedulerTask, ['save' => function () {
+            return true;
+        }]);
 
         $task = new AlphabetTask;
         $task->setModel($model);
@@ -60,9 +68,9 @@ class TaskTest extends \webtoolsnz\scheduler\tests\TestCase
      */
     public function testShouldRun($expected, $status_id, $active, $force)
     {
-        $model = $this->getMockBuilder('\SchedulerTask')
-            ->setMethods(['save'])
-            ->getMock();
+        $model = test::double(new SchedulerTask, ['save' => function () {
+            return true;
+        }]);
 
         $model->status_id = $status_id;
         $model->active = $active;
