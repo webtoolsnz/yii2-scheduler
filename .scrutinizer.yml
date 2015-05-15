@@ -11,9 +11,11 @@ build:
             - php tests/codeception/_app/yii migrate/up --interactive=0
     tests:
         before:
-            - cd tests
-            - ~/.composer/vendor/bin/codecept build
+            - cd tests && ~/.composer/vendor/bin/codecept build
+            - pwd
         override:
+            - cd tests
+            - pwd
             - ~/.composer/vendor/bin/codecept run
 
 filter:
