@@ -11,12 +11,10 @@ build:
             - php tests/codeception/_app/yii migrate/up --interactive=0
     tests:
         before:
-            - cd tests && ~/.composer/vendor/bin/codecept build
-            - pwd
-        override:
             - cd tests
-            - pwd
-            - ~/.composer/vendor/bin/codecept run
+            - ~/.composer/vendor/bin/codecept build
+        override:
+            - ~/.composer/vendor/bin/codecept run -v
 
 filter:
     excluded_paths: [tests/*, src/models/base/*]
