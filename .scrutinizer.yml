@@ -1,6 +1,9 @@
 build:
     environment:
         php: '5.4.28'
+    cache:
+        directories:
+            - '/home/scrutinizer/.composer'
     dependencies:
             before:
               - composer global require "codeception/codeception:2.0.*@dev"
