@@ -3,7 +3,6 @@ build:
         php: '5.4.28'
     project_setup:
         before:
-            - composer self-update
             - composer global require "codeception/codeception:2.0.*@dev"
             - composer global require "fxp/composer-asset-plugin:~1.0"
             - composer install
