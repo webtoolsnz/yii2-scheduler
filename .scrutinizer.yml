@@ -10,9 +10,7 @@ build:
             - '~/.composer/'
     dependencies:
             before:
-              - composer global require "codeception/codeception:~2.0"
               - composer global require "fxp/composer-asset-plugin:~1.0"
-              - composer global update
     project_setup:
         before:
             - mysql -e "CREATE DATABASE scheduler_test;"
@@ -20,8 +18,8 @@ build:
     tests:
         before:
             - cd tests
-            - ~/.composer/vendor/bin/codecept build
-            - ~/.composer/vendor/bin/codecept run --report --coverage-xml
+            - vendor/codeception/codeception/codecept build
+            - vendor/codeception/codeception/codecept run --report --coverage-xml
 #        override:
 #            -
 #                command:
