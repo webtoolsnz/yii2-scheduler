@@ -11,12 +11,6 @@ class TaskTest extends TestCase
 {
     public $appConfig = '@tests/config/unit.php';
 
-    protected function tearDown()
-    {
-        // remove all registered test doubles
-        test::clean();
-    }
-
     public function testStartStop()
     {
         $model = new SchedulerTask();

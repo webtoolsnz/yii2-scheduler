@@ -38,12 +38,4 @@ class TaskRunnerTest extends TestCase
 
         $runner->errorTearDown();
     }
-
-    public function testTest()
-    {
-
-
-
-
-    }
 }
