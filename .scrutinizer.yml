@@ -1,6 +1,7 @@
-filter:
-    excluded_paths: [tests/*, src/models/base/*]
 
+#
+# Build Config
+#
 build:
     environment:
         php: '5.4.28'
@@ -21,5 +22,24 @@ build:
             - cd tests
             - ~/.composer/vendor/bin/codecept build
         override:
-            - ~/.composer/vendor/bin/codecept run -v
-
+            command:  '~/.composer/vendor/bin/codecept run --report --coverage-xml'
+            coverage:
+                file: 'codception/_output/coverage.xml'
+                format: 'php-clover'
+##
+# Analysis Config
+##
+filter:
+    excluded_paths: [tests/*, src/models/base/*]
+tools:
+  external_code_coverage: true
+  php_analyzer: true
+  php_mess_detector: true
+  php_sim: true
+  sensiolabs_security_checker: true
+  php_changetracking: true
+  php_cs_fixer:
+      config: { level: psr2 }
+checks:
+  php:
+    code_rating: true
