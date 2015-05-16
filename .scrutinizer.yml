@@ -1,3 +1,6 @@
+filter:
+    excluded_paths: [tests/*, src/models/base/*]
+
 build:
     environment:
         php: '5.4.28'
@@ -6,7 +9,7 @@ build:
             - '~/.composer/'
     dependencies:
             before:
-              - composer global require "codeception/codeception:2.0.*@dev"
+              - composer global require "codeception/codeception:~2.0."
               - composer global require "fxp/composer-asset-plugin:~1.0"
     project_setup:
         before:
@@ -18,5 +21,4 @@ build:
             - ~/.composer/vendor/bin/codecept build
         override:
             - ~/.composer/vendor/bin/codecept run -v
-filter:
-    excluded_paths: [tests/*, src/models/base/*]
+
