@@ -11,7 +11,6 @@ build:
     dependencies:
             before:
               - composer global require "fxp/composer-asset-plugin:~1.0"
-            override
     project_setup:
         before:
             - mysql -e "CREATE DATABASE scheduler_test;"
