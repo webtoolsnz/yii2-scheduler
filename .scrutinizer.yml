@@ -14,11 +14,11 @@ build:
     project_setup:
         before:
             - mysql -e "CREATE DATABASE scheduler_test;"
-            - php tests/_app/yii migrate/up --interactive=0
+            - php tests/_app/yii migrate/up --interactive=0 --migrationPath=src/migrations/
     tests:
         before:
-            - vendor/codeception/codeception/codecept build
-        #    - vendor/codeception/codeception/codecept run --report --coverage-xml
+            - vendor/bin/codecept build
+            - vendor/bin/codecept run --report --coverage-xml
 #        override:
 #            -
 #                command:
