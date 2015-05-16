@@ -22,10 +22,11 @@ build:
             - cd tests
             - ~/.composer/vendor/bin/codecept build
         override:
-            command:  '~/.composer/vendor/bin/codecept run --report --coverage-xml'
-            coverage:
-                file: 'codception/_output/coverage.xml'
-                format: 'php-clover'
+            -
+                command:  '~/.composer/vendor/bin/codecept run --report --coverage-xml'
+                coverage:
+                    file: 'codception/_output/coverage.xml'
+                    format: 'php-clover'
 ##
 # Analysis Config
 ##
