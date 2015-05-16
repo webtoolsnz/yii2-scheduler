@@ -5,6 +5,7 @@ namespace webtoolsnz\scheduler\tests;
 use \webtoolsnz\scheduler\tests\tasks\AlphabetTask;
 use \webtoolsnz\scheduler\models\SchedulerTask;
 use \yii\codeception\TestCase;
+use AspectMock\Test as test;
 
 
 class TaskTest extends TestCase
@@ -13,7 +14,9 @@ class TaskTest extends TestCase
 
     public function testStartStop()
     {
-        $model = new SchedulerTask();
+        $model = test::double(new SchedulerTask(), ['save' => function () {
+            return true;
+        }]);
 
         $task = new AlphabetTask;
         $task->setModel($model);
@@ -61,7 +64,9 @@ class TaskTest extends TestCase
      */
     public function testShouldRun($expected, $status_id, $active, $force)
     {
-        $model = new SchedulerTask();
+        $model = test::double(new SchedulerTask(), ['save' => function () {
+            return true;
+        }]);
 
         $model->status_id = $status_id;
         $model->active = $active;
