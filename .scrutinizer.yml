@@ -18,7 +18,6 @@ build:
     tests:
         before:
             - vendor/bin/codecept build
-            - vendor/bin/codecept run --report --coverage-xml
 #        override:
 #            -
 #                command:
