@@ -1,0 +1,10 @@
+class_name: FunctionalTester
+modules:
+    enabled:
+      - Asserts
+      - Yii2
+      - tests\_support\FixtureHelper
+      - tests\_support\MailHelper
+    config:
+        Yii2:
+            configFile: 'tests/_config/functional.php'

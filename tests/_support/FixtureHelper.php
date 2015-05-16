@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\codeception\_support;
+namespace tests\_support;
 
 use Codeception\Module;
 use Codeception\TestCase;

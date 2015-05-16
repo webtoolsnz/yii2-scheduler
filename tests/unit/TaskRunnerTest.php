@@ -8,6 +8,8 @@ use \yii\codeception\TestCase;
 
 class TaskRunnerTest extends TestCase
 {
+    public $appConfig = '@tests/config/unit.php';
+
     public function testSetGetTask()
     {
         $runner = new TaskRunner();

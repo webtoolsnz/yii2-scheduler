@@ -8,6 +8,8 @@ use \yii\codeception\TestCase;
 
 class ModuleTest extends TestCase
 {
+    public $appConfig = '@tests/config/unit.php';
+
     public function testGetTasks()
     {
         $module = Yii::createObject([

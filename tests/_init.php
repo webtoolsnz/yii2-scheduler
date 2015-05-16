@@ -1,6 +1,6 @@
 <?php
 
-$vendor = __DIR__.'/../../vendor';
+$vendor = __DIR__.'/../vendor';
 
 defined('YII_DEBUG') or define('YII_DEBUG', false);
 defined('YII_ENV') or define('YII_ENV', 'test');

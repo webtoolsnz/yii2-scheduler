@@ -8,7 +8,8 @@ $config = [
     'aliases' => [
         '@vendor'        => VENDOR_DIR,
         '@bower'         => VENDOR_DIR.'/bower',
-        '@tests/codeception/config' => '@tests/codeception/_config',
+        '@tests' => dirname(__DIR__).'/../',
+        '@tests/config' => '@tests/_config',
     ],
     'modules' => [
         'scheduler' => [

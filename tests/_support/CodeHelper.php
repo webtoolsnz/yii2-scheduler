@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\codeception\_support;
+namespace tests\_support;
 
 use AspectMock\Test;
 use Codeception\Module;
