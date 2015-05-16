@@ -18,13 +18,13 @@ build:
     tests:
         before:
             - vendor/bin/codecept build
-            - vendor/bin/codecept run
-        override:
-            -
-                command: 'vendor/bin/codecept run --coverage --xml'
-                coverage:
-                    file: 'tests/_output/report.xml'
-                    format: 'php-clover'
+            #- vendor/bin/codecept run --coverage --xml
+        #override:
+        #   -
+        #        command: 'vendor/bin/codecept run '
+        #        coverage:
+        #            file: 'tests/_output/coverage.serialized'
+        #            format: 'php-clover'
 #
 # Analysis Config
 ##
