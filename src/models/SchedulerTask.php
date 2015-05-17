@@ -57,7 +57,6 @@ class SchedulerTask extends \webtoolsnz\scheduler\models\base\SchedulerTask
      */
     public function getStatus()
     {
-        die("NO!!!!");
         return isset(self::$_statuses[$this->status_id]) ? self::$_statuses[$this->status_id] : null;
     }
 
