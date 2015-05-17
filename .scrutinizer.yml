@@ -18,6 +18,7 @@ build:
     tests:
         before:
             - vendor/bin/codecept build
+            - vendor/bin/codecept run >/dev/null 2>&1 # this is a dirty hack :(
         override:
            -
                 command: 'vendor/bin/codecept run --coverage --coverage-xml --coverage-html'
