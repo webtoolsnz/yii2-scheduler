@@ -2,6 +2,7 @@
 
 namespace webtoolsnz\scheduler\console;
 
+use webtoolsnz\scheduler\models\base\SchedulerLog;
 use webtoolsnz\scheduler\models\SchedulerTask;
 use webtoolsnz\scheduler\TaskRunner;
 use Yii;
@@ -70,6 +71,7 @@ class SchedulerController extends Controller
             echo sprintf("\tRunning %s...", $task->getName());
             $runner = new TaskRunner();
             $runner->setTask($task);
+            $runner->setLog(new SchedulerLog());
             $runner->runTask();
             echo 'done'.PHP_EOL;
         }

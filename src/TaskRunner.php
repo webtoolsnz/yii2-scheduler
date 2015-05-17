@@ -25,6 +25,11 @@ class TaskRunner extends \yii\base\Component
     private $_task;
 
     /**
+     * @var \webtoolsnz\scheduler\models\SchedulerLog
+     */
+    private $_log;
+
+    /**
      * @param Task $task
      */
     public function setTask(Task $task)
@@ -41,6 +46,22 @@ class TaskRunner extends \yii\base\Component
     }
 
     /**
+     * @param \webtoolsnz\scheduler\models\SchedulerLog $log
+     */
+    public function setLog($log)
+    {
+        $this->_log = $log;
+    }
+
+    /**
+     * @return SchedulerLog
+     */
+    public function getLog()
+    {
+        return $this->_log;
+    }
+
+    /**
      * @param bool $forceRun
      */
     public function runTask($forceRun = false)
@@ -54,8 +75,8 @@ class TaskRunner extends \yii\base\Component
             $task->run();
             $output = ob_get_contents();
             ob_end_clean();
-            $task->stop();
             $this->log($output);
+            $task->stop();
         }
 
         $this->errorTearDown();
@@ -119,7 +140,7 @@ class TaskRunner extends \yii\base\Component
     public function log($output)
     {
         $model = $this->getTask()->getModel();
-        $log = new SchedulerLog();
+        $log = $this->getLog();
         $log->started_at = $model->started_at;
         $log->ended_at = date('Y-m-d H:i:s');
         $log->error = $this->error ? 1 : 0;
