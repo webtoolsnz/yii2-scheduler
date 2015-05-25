@@ -6,6 +6,7 @@ use webtoolsnz\scheduler\models\base\SchedulerLog;
 use webtoolsnz\scheduler\models\SchedulerTask;
 use webtoolsnz\scheduler\TaskRunner;
 use Yii;
+use yii\base\InvalidParamException;
 use yii\console\Controller;
 use yii\helpers\Console;
 
@@ -13,16 +14,12 @@ use yii\helpers\Console;
 /**
  * Scheduled task runner for Yii2
  *
- * You can use this command to generate models, controllers, etc. For example,
- * to generate an ActiveRecord model based on a DB table, you can run:
+ * You can use this command to manage scheduler tasks
  *
  * ```
- * $ ./yii gii/model --tableName=city --modelClass=City
+ * $ ./yii scheduler/run-all
  * ```
  *
- * @author Tobias Munk <schmunk@usrbin.de>
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since  2.0
  */
 class SchedulerController extends Controller
 {
@@ -31,6 +28,22 @@ class SchedulerController extends Controller
      */
     public $module;
 
+    /**
+     * Force pending tasks to run.
+     * @var bool
+     */
+    public $force = false;
+
+    /**
+     * Name of the task to run
+     * @var null|string
+     */
+    public $taskName;
+
+    /**
+     * Colour map for SchedulerTask status ids
+     * @var array
+     */
     private $_statusColors = [
         SchedulerTask::STATUS_PENDING => Console::FG_BLUE,
         SchedulerTask::STATUS_DUE => Console::FG_YELLOW,
@@ -38,6 +51,30 @@ class SchedulerController extends Controller
         SchedulerTask::STATUS_RUNNING => Console::FG_GREEN,
     ];
 
+    /**
+     * @param string $actionId
+     * @return array
+     */
+    public function options($actionId)
+    {
+        $options = [];
+
+        switch ($actionId) {
+            case 'run-all':
+                $options[] = 'force';
+                break;
+            case 'run':
+                $options[] = 'force';
+                $options[] = 'taskName';
+                break;
+        }
+
+        return $options;
+    }
+
+    /**
+     * List all tasks
+     */
     public function actionIndex()
     {
         // Update task index
@@ -61,6 +98,9 @@ class SchedulerController extends Controller
         }
     }
 
+    /**
+     * Run all due tasks
+     */
     public function actionRunAll()
     {
         $tasks = $this->module->getTasks();
@@ -72,10 +112,31 @@ class SchedulerController extends Controller
             $runner = new TaskRunner();
             $runner->setTask($task);
             $runner->setLog(new SchedulerLog());
-            $runner->runTask();
+            $runner->runTask($this->force);
             echo 'done'.PHP_EOL;
         }
     }
 
+    /**
+     * Run the specified task (if due)
+     */
+    public function actionRun()
+    {
+        if (!$this->taskName) {
+            throw new InvalidParamException('taskName must be specified');
+        }
 
+        $task = $this->module->loadTask($this->taskName);
+
+        if (!$task) {
+            throw new InvalidParamException('Invalid taskName');
+        }
+
+        echo sprintf("\tRunning %s...", $task->getName());
+        $runner = new TaskRunner();
+        $runner->setTask($task);
+        $runner->setLog(new SchedulerLog());
+        $runner->runTask($this->force);
+        echo 'done'.PHP_EOL;
+    }
 }
