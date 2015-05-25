@@ -29,6 +29,8 @@ class Module extends \yii\base\Module implements BootstrapInterface
      */
     public function bootstrap($app)
     {
+        Yii::setAlias('@scheduler', dirname(__DIR__).'/src');
+
         if ($app instanceof \yii\console\Application) {
             $app->controllerMap[$this->id] = [
                 'class' => 'webtoolsnz\scheduler\console\SchedulerController',
@@ -70,18 +72,23 @@ class Module extends \yii\base\Module implements BootstrapInterface
     }
 
     /**
-     * Given the className of a task, it will return
-     * a new instance of that task.
+     * Given the className of a task, it will return a new instance of that task.
+     * If the task doesn't exist, null will be returned.
      *
      * @param $className
-     * @return object
+     * @return null|object
      * @throws \yii\base\InvalidConfigException
      */
     public function loadTask($className)
     {
         $className = implode('\\', [$this->taskNameSpace, $className]);
-        $task = Yii::createObject($className);
-        $task->setModel(SchedulerTask::createTaskModel($task));
+
+        try {
+            $task = Yii::createObject($className);
+            $task->setModel(SchedulerTask::createTaskModel($task));
+        } catch (\ReflectionException $e) {
+            $task = null;
+        }
 
         return $task;
     }
