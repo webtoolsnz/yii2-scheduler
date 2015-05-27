@@ -88,7 +88,7 @@ class TaskRunnerTest extends TestCase
         $ended_at = date('Y-m-d H:i:s');
 
         $this->assertEquals(SchedulerTask::STATUS_PENDING, $model->status_id);
-        $this->assertEquals($model->id, $logModel->scheduled_task_id);
+        $this->assertEquals($model->id, $logModel->scheduler_task_id);
         $this->assertEquals($started_at, $logModel->started_at);
         $this->assertEquals($ended_at, $logModel->ended_at);
         $this->assertEquals('ABCDEFGHIJKLMNOPQRSTUVWXYZ', $logModel->output);

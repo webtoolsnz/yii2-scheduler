@@ -104,8 +104,7 @@ abstract class Task extends \yii\base\Component
     {
         $model = $this->getModel();
         $model->started_at = date('Y-m-d H:i:s');
-        $model->save(false);
-    }
+        $model->save(false);}
 
     /**
      * Mark the task as stopped.

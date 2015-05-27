@@ -9,7 +9,7 @@ class m150510_090513_Scheduler extends Migration
     {
         $this->createTable('scheduler_log', [
             'id'=> Schema::TYPE_PK.'',
-            'scheduled_task_id'=> Schema::TYPE_INTEGER.'(11) NOT NULL',
+            'scheduler_task_id'=> Schema::TYPE_INTEGER.'(11) NOT NULL',
             'started_at'=> Schema::TYPE_TIMESTAMP.' NOT NULL DEFAULT CURRENT_TIMESTAMP',
             'ended_at'=> Schema::TYPE_TIMESTAMP.' NOT NULL DEFAULT "0000-00-00 00:00:00"',
             'output'=> Schema::TYPE_TEXT.' NOT NULL',
@@ -17,7 +17,7 @@ class m150510_090513_Scheduler extends Migration
         ], 'ENGINE=InnoDB');
 
         $this->createIndex('id_UNIQUE', 'scheduler_log','id',1);
-        $this->createIndex('fk_table1_scheduled_task_idx', 'scheduler_log','scheduled_task_id',0);
+        $this->createIndex('fk_table1_scheduler_task_idx', 'scheduler_log','scheduler_task_id',0);
 
         $this->createTable('scheduler_task', [
             'id'=> Schema::TYPE_PK.'',
@@ -33,7 +33,7 @@ class m150510_090513_Scheduler extends Migration
 
         $this->createIndex('id_UNIQUE', 'scheduler_task','id',1);
         $this->createIndex('name_UNIQUE', 'scheduler_task','name',1);
-        $this->addForeignKey('fk_scheduler_log_scheduled_task_id', 'scheduler_log', 'scheduled_task_id', 'scheduler_task', 'id');
+        $this->addForeignKey('fk_scheduler_log_scheduler_task_id', 'scheduler_log', 'scheduler_task_id', 'scheduler_task', 'id');
     }
 
     public function safeDown()
@@ -41,7 +41,7 @@ class m150510_090513_Scheduler extends Migration
         $this->delete('scheduler_log');
         $this->delete('scheduler_task');
 
-        $this->dropForeignKey('fk_scheduler_log_scheduled_task_id', 'scheduler_log');
+        $this->dropForeignKey('fk_scheduler_log_scheduler_task_id', 'scheduler_log');
         $this->dropTable('scheduler_log');
         $this->dropTable('scheduler_task');
     }

@@ -79,8 +79,8 @@ class TaskRunner extends \yii\base\Component
             $task->stop();
         }
 
-        $this->errorTearDown();
         $task->getModel()->save();
+        $this->errorTearDown();
     }
 
     /**
@@ -130,8 +130,8 @@ class TaskRunner extends \yii\base\Component
         ob_end_clean();
 
         $this->error = true;
-        $this->getTask()->getModel()->stop();
         $this->log($output);
+        $this->getTask()->stop();
     }
 
     /**
@@ -145,7 +145,7 @@ class TaskRunner extends \yii\base\Component
         $log->ended_at = date('Y-m-d H:i:s');
         $log->error = $this->error ? 1 : 0;
         $log->output = $output;
-        $log->scheduled_task_id = $model->id;
+        $log->scheduler_task_id = $model->id;
         $log->save(false);
     }
 

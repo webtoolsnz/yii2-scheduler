@@ -9,13 +9,13 @@ use yii\data\ActiveDataProvider;
  * This is the base-model class for table "scheduler_log".
  *
  * @property integer $id
- * @property integer $scheduled_task_id
+ * @property integer $scheduler_task_id
  * @property string $started_at
  * @property string $ended_at
  * @property string $output
  * @property integer $error
  *
- * @property \webtoolsnz\scheduler\models\SchedulerTask $scheduledTask
+ * @property \webtoolsnz\scheduler\models\SchedulerTask $schedulerTask
  */
 class SchedulerLog extends \yii\db\ActiveRecord
 {
@@ -49,8 +49,8 @@ class SchedulerLog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['scheduled_task_id', 'output'], 'required'],
-            [['scheduled_task_id', 'error'], 'integer'],
+            [['scheduler_task_id', 'output'], 'required'],
+            [['scheduler_task_id', 'error'], 'integer'],
             [['started_at', 'ended_at'], 'safe'],
             [['output'], 'string']
         ];
@@ -63,7 +63,7 @@ class SchedulerLog extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'scheduled_task_id' => Yii::t('app', 'Scheduled Task ID'),
+            'scheduler_task_id' => Yii::t('app', 'Scheduler Task ID'),
             'started_at' => Yii::t('app', 'Started At'),
             'ended_at' => Yii::t('app', 'Ended At'),
             'output' => Yii::t('app', 'Output'),
@@ -74,9 +74,9 @@ class SchedulerLog extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getScheduledTask()
+    public function getSchedulerTask()
     {
-        return $this->hasOne(\webtoolsnz\scheduler\models\SchedulerTask::className(), ['id' => 'scheduled_task_id']);
+        return $this->hasOne(\webtoolsnz\scheduler\models\SchedulerTask::className(), ['id' => 'scheduler_task_id']);
     }
 
     /**
@@ -97,15 +97,11 @@ class SchedulerLog extends \yii\db\ActiveRecord
             'sort' => ['defaultOrder'=>['id'=>SORT_DESC]],
         ]);
 
-        if (!$this->load($params, $formName)) {
-            // uncomment the following line if you do not want to any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
-        }
+        $this->load($params, $formName);
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'scheduled_task_id' => $this->scheduled_task_id,
+            'scheduler_task_id' => $this->scheduler_task_id,
             'error' => $this->error,
         ]);
 

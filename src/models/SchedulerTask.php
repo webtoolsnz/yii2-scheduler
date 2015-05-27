@@ -3,6 +3,7 @@
 namespace webtoolsnz\scheduler\models;
 
 use Yii;
+use yii\helpers\Inflector;
 
 /**
  * This is the model class for table "scheduler_task".
@@ -25,6 +26,15 @@ class SchedulerTask extends \webtoolsnz\scheduler\models\base\SchedulerTask
         self::STATUS_RUNNING => 'Running',
         self::STATUS_OVERDUE => 'Overdue',
     ];
+
+    /**
+     * Return Taskname
+     * @return string
+     */
+    public function __toString()
+    {
+        return Inflector::camel2words($this->name);
+    }
 
     /**
      * @param $task
