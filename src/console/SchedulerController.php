@@ -122,7 +122,7 @@ class SchedulerController extends Controller
      */
     public function actionRun()
     {
-        if (!$this->taskName) {
+        if (null === $this->taskName) {
             throw new InvalidParamException('taskName must be specified');
         }
 

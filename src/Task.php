@@ -42,7 +42,7 @@ abstract class Task extends \yii\base\Component
     public $overdueThreshold = 3600;
 
     /**
-     * @var \webtoolsnz\scheduler\models
+     * @var null|SchedulerTask
      */
     private $_model;
 
@@ -74,7 +74,7 @@ abstract class Task extends \yii\base\Component
     }
 
     /**
-     * @param $model
+     * @param SchedulerTask $model
      */
     public function setModel($model)
     {
@@ -82,7 +82,7 @@ abstract class Task extends \yii\base\Component
     }
 
     /**
-     * @return $models
+     * @return SchedulerTask
      */
     public function getModel()
     {

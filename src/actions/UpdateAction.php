@@ -35,8 +35,6 @@ class UpdateAction extends Action
 
         if ($model->load($request->post())) {
             $model->save();
-
-            var_dump($model->errors);
         }
 
         $logModel = new SchedulerLog();
