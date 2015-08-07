@@ -31,6 +31,11 @@ class TaskRunner extends \yii\base\Component
     private $_log;
 
     /**
+     * @var bool
+     */
+    private $running = false;
+
+    /**
      * @param Task $task
      */
     public function setTask(Task $task)
@@ -74,12 +79,15 @@ class TaskRunner extends \yii\base\Component
             $task->start();
             ob_start();
             try {
+                $this->running = true;
                 $task->run();
+                $this->running = false;
                 $output = ob_get_contents();
                 ob_end_clean();
                 $this->log($output);
                 $task->stop();
             } catch (\Exception $e) {
+                $this->running = false;
                 $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
             }
         }
@@ -103,12 +111,11 @@ class TaskRunner extends \yii\base\Component
             $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
         });
 
-
         register_shutdown_function(function () {
-            if (null !== ($error = error_get_last())) {
+            if ($this && $this->running && null !== ($error = error_get_last())) {
                 $this->handleError($error['type'], $error['message'], $error['file'], $error['line']);
             }
-        });
+       });
     }
 
     /**
