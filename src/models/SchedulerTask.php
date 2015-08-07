@@ -15,6 +15,7 @@ class SchedulerTask extends \webtoolsnz\scheduler\models\base\SchedulerTask
     const STATUS_DUE = 20;
     const STATUS_RUNNING = 30;
     const STATUS_OVERDUE = 40;
+    const STATUS_ERROR = 50;
 
     /**
      * @var array
@@ -25,6 +26,7 @@ class SchedulerTask extends \webtoolsnz\scheduler\models\base\SchedulerTask
         self::STATUS_DUE => 'Due',
         self::STATUS_RUNNING => 'Running',
         self::STATUS_OVERDUE => 'Overdue',
+        self::STATUS_ERROR => 'Error',
     ];
 
     /**
@@ -77,12 +79,21 @@ class SchedulerTask extends \webtoolsnz\scheduler\models\base\SchedulerTask
     public function updateStatus()
     {
         $status = $this->status_id;
-        $isDue = in_array($status, [self::STATUS_PENDING, self::STATUS_DUE, self::STATUS_OVERDUE]) && strtotime($this->next_run) <= time();
+        $isDue = in_array(
+            $status,
+            [
+                self::STATUS_PENDING,
+                self::STATUS_DUE,
+                self::STATUS_OVERDUE,
+            ]
+        ) && strtotime($this->next_run) <= time();
 
         if ($isDue && $this->started_at == null) {
             $status = self::STATUS_DUE;
         } elseif ($this->started_at !== null) {
             $status = self::STATUS_RUNNING;
+        } elseif ($this->status_id == self::STATUS_ERROR) {
+            $status = $this->status_id;
         } elseif (!$isDue) {
             $status = self::STATUS_PENDING;
         }

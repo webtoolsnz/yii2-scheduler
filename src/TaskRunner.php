@@ -2,6 +2,7 @@
 namespace webtoolsnz\scheduler;
 
 use webtoolsnz\scheduler\models\SchedulerLog;
+use webtoolsnz\scheduler\models\SchedulerTask;
 
 /**
  * Class TaskRunner
@@ -72,13 +73,16 @@ class TaskRunner extends \yii\base\Component
         if ($task->shouldRun($forceRun)) {
             $task->start();
             ob_start();
-            $task->run();
-            $output = ob_get_contents();
-            ob_end_clean();
-            $this->log($output);
-            $task->stop();
+            try {
+                $task->run();
+                $output = ob_get_contents();
+                ob_end_clean();
+                $this->log($output);
+                $task->stop();
+            } catch (\Exception $e) {
+                $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
+            }
         }
-
         $task->getModel()->save();
         $this->errorTearDown();
     }
@@ -89,15 +93,18 @@ class TaskRunner extends \yii\base\Component
      */
     public function errorSetup()
     {
-        set_error_handler(function($errorNumber, $errorText, $errorFile, $errorLine) {
+
+        set_error_handler(function ($errorNumber, $errorText, $errorFile, $errorLine) {
             throw new \ErrorException($errorText, 0, $errorNumber, $errorFile, $errorLine);
         });
 
-        set_exception_handler(function($e) {
+        set_exception_handler(function ($e) {
+            /* @var \Exception $e */
             $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
         });
 
-        register_shutdown_function(function() {
+
+        register_shutdown_function(function () {
             if (null !== ($error = error_get_last())) {
                 $this->handleError($error['type'], $error['message'], $error['file'], $error['line']);
             }
@@ -131,6 +138,7 @@ class TaskRunner extends \yii\base\Component
 
         $this->error = true;
         $this->log($output);
+        $this->getTask()->getModel()->status_id = SchedulerTask::STATUS_ERROR;
         $this->getTask()->stop();
     }
 
@@ -148,5 +156,4 @@ class TaskRunner extends \yii\base\Component
         $log->scheduler_task_id = $model->id;
         $log->save(false);
     }
-
 }

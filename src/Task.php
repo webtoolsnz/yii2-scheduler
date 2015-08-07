@@ -125,7 +125,7 @@ abstract class Task extends \yii\base\Component
     public function shouldRun($forceRun = false)
     {
         $model = $this->getModel();
-        $isDue = in_array($model->status_id, [SchedulerTask::STATUS_DUE, SchedulerTask::STATUS_OVERDUE]);
+        $isDue = in_array($model->status_id, [SchedulerTask::STATUS_DUE, SchedulerTask::STATUS_OVERDUE, SchedulerTask::STATUS_ERROR]);
         $isRunning = $model->status_id == SchedulerTask::STATUS_RUNNING;
 
         return (!$isRunning && $model->active && ($isDue || $forceRun));

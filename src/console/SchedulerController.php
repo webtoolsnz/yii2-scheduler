@@ -49,6 +49,7 @@ class SchedulerController extends Controller
         SchedulerTask::STATUS_DUE => Console::FG_YELLOW,
         SchedulerTask::STATUS_OVERDUE => Console::FG_RED,
         SchedulerTask::STATUS_RUNNING => Console::FG_GREEN,
+        SchedulerTask::STATUS_ERROR => Console::FG_RED,
     ];
 
     /**
@@ -113,8 +114,9 @@ class SchedulerController extends Controller
             $runner->setTask($task);
             $runner->setLog(new SchedulerLog());
             $runner->runTask($this->force);
-            echo 'done'.PHP_EOL;
+            echo $runner->error ? 'error' : 'done'.PHP_EOL;
         }
+        echo PHP_EOL;
     }
 
     /**
@@ -137,6 +139,6 @@ class SchedulerController extends Controller
         $runner->setTask($task);
         $runner->setLog(new SchedulerLog());
         $runner->runTask($this->force);
-        echo 'done'.PHP_EOL;
+        echo $runner->error ? 'error' : 'done'.PHP_EOL;
     }
 }

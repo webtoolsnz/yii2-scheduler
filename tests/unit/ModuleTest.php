@@ -20,10 +20,11 @@ class ModuleTest extends TestCase
 
         $tasks = $module->getTasks();
 
-        $this->assertEquals(2, count($tasks));
+        $this->assertEquals(3, count($tasks));
 
         $this->assertEquals('AlphabetTask', $tasks[0]->getName());
-        $this->assertEquals('NumberTask', $tasks[1]->getName());
+        $this->assertEquals('NumberTask', $tasks[2]->getName());
+        $this->assertEquals('ErrorTask', $tasks[1]->getName());
     }
 
     public function testGetTaskInvalidPath()

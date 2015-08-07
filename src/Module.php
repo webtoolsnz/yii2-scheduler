@@ -43,7 +43,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
      * Scans the taskPath for any task files, if any are found it attempts to load them,
      * creates a new instance of each class and appends it to an array, which it returns.
      *
-     * @return array
+     * @return Task[]
      * @throws \yii\base\ErrorException
      */
     public function getTasks()
