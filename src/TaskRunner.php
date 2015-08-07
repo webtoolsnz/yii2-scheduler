@@ -110,12 +110,6 @@ class TaskRunner extends \yii\base\Component
             /* @var \Exception $e */
             $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
         });
-
-        register_shutdown_function(function () {
-            if ($this && $this->running && null !== ($error = error_get_last())) {
-                $this->handleError($error['type'], $error['message'], $error['file'], $error['line']);
-            }
-       });
     }
 
     /**
