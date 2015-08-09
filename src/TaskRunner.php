@@ -101,15 +101,15 @@ class TaskRunner extends \yii\base\Component
      */
     public function errorSetup()
     {
-
+        /* Do nothing - trust Yii's error handling will do the job
         set_error_handler(function ($errorNumber, $errorText, $errorFile, $errorLine) {
             throw new \ErrorException($errorText, 0, $errorNumber, $errorFile, $errorLine);
         });
 
         set_exception_handler(function ($e) {
-            /* @var \Exception $e */
+            /* @var \Exception $e * /
             $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
-        });
+        });*/
     }
 
     /**
@@ -117,8 +117,8 @@ class TaskRunner extends \yii\base\Component
      */
     public function errorTearDown()
     {
-        restore_error_handler();
-        restore_exception_handler();
+        /*restore_error_handler();
+        restore_exception_handler();*/
     }
 
     /**
