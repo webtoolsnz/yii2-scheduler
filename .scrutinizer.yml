@@ -4,7 +4,8 @@
 #
 build:
     environment:
-        php: '5.4.28'
+        php:
+          version: '5.5.25'
     cache:
         directories:
             - '~/.composer/'
