@@ -134,6 +134,11 @@ class TaskRunner extends \yii\base\Component
         echo sprintf('ERROR LINE: %s %s', $file, PHP_EOL);
         echo sprintf('ERROR MESSAGE: %s %s', $lineNumber, PHP_EOL);
 
+        // if the failed task was mid transaction, rollback so we can save.
+        if (null !==($tx = \Yii::$app->db->getTransaction())) {
+            $tx->rollBack();
+        }
+
         $output = ob_get_contents();
         ob_end_clean();
 
