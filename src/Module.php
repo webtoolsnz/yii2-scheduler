@@ -31,7 +31,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     {
         Yii::setAlias('@scheduler', dirname(__DIR__).'/src');
 
-        if ($app instanceof \yii\console\Application) {
+        if ($app instanceof \yii\console\Application && !isset($app->controllerMap[$this->id])) {
             $app->controllerMap[$this->id] = [
                 'class' => 'webtoolsnz\scheduler\console\SchedulerController',
                 'module' => $this,
