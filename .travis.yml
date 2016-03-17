@@ -4,7 +4,7 @@ php:
   - 5.4
   - 5.5
   - 5.6
-  
+
 install:
   - composer self-update
   - composer install
@@ -19,8 +19,8 @@ before_script:
   - vendor/bin/codecept run || true # this is a dirty hack :(
 
 script:
-  - vendor/bin/codecept run --coverage --coverage-xml --coverage-html
+  - vendor/bin/codecept run --coverage --coverage-xml
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
+  - php ocular.phar code-coverage:upload --format=php-clover tests/_output/coverage.xml
