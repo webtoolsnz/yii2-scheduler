@@ -1,8 +1,9 @@
 # yii2-scheduler
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/webtoolsnz/yii2-scheduler/badges/quality-score.png?b=master&s=8e54a25c083835ea391bee61d40ce0ec3c5b75cf)](https://scrutinizer-ci.com/g/webtoolsnz/yii2-scheduler/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/webtoolsnz/yii2-scheduler/badges/build.png?b=master&s=3df6c1a7e97264cb03f8e25a41931a72ed6de975)](https://scrutinizer-ci.com/g/webtoolsnz/yii2-scheduler/build-status/master)
-[![Code Coverage](https://scrutinizer-ci.com/g/webtoolsnz/yii2-scheduler/badges/coverage.png?b=master&s=96b0b17cb100fa786f29f51c752b7d07b9503127)](https://scrutinizer-ci.com/g/webtoolsnz/yii2-scheduler/?branch=master)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Build Status](https://img.shields.io/travis/webtoolsnz/yii2-scheduler/master.svg?style=flat-square)](https://travis-ci.org/webtoolsnz/yii2-scheduler)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/webtoolsnz/yii2-scheduler.svg?style=flat-square)](https://scrutinizer-ci.com/g/webtoolsnz/yii2-scheduler/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/webtoolsnz/yii2-scheduler.svg?style=flat-square)](https://scrutinizer-ci.com/g/webtoolsnz/yii2-scheduler)
 
 
 A scheduled task manager for yii2
