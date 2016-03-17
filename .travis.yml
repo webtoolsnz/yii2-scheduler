@@ -16,7 +16,6 @@ before_script:
   - travis_retry mysql -e "CREATE DATABASE scheduler_test;"
   - php tests/_app/yii migrate/up --interactive=0 --migrationPath=src/migrations/
   - vendor/bin/codecept build
-  - vendor/bin/codecept run || true # this is a dirty hack :(
 
 script:
   - vendor/bin/codecept run --coverage --coverage-xml
