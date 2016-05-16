@@ -24,8 +24,8 @@ The `bootstrap` and `modules` sections in the `config/console.php` and `config/w
 ~~~php
     'bootstrap' => ['log', 'scheduler'],
     'modules' => [
-            'scheduler' => ['class' => 'webtoolsnz\scheduler\Module'],
-        ],
+        'scheduler' => ['class' => 'webtoolsnz\scheduler\Module'],
+    ],
 ~~~
 
 After the configuration files have been updated, a `tasks` directory will need to be created in the root of your project.
@@ -101,6 +101,32 @@ The above code defines a simple task that runs at the start of every hour, and p
 The `$schedule` property of this class defines how often the task will run, these are simply [Cron Expression](http://en.wikipedia.org/wiki/Cron#Examples)
 
 
+### Running the tasks
+
+Scheduler provides an intuitive CLI for executing tasks, below are some examples
+
+```bash
+ # list all tasks and their status
+ $ php yii scheduler
+
+ # run the task if due
+ $ php yii scheduler/run --taskName=AlphabetTask
+
+ # force the task to run regardless of schedule
+ $ php yii scheduler/run --taskName=AlphabetTask --force
+
+ # run all tasks
+ $ php yii scheduler/run-all
+
+ # force all tasks to run
+ $ php yii scheduler/run-all --force
+```
+
+In order to have your tasks run automatically simply setup a crontab like so
+
+```bash
+*/5 * * * * admin php /path/to/my/app/yii scheduler/run-all > /dev/null &
+```
 
 ## License
 

@@ -4,6 +4,7 @@ namespace webtoolsnz\scheduler\console;
 
 use webtoolsnz\scheduler\models\base\SchedulerLog;
 use webtoolsnz\scheduler\models\SchedulerTask;
+use webtoolsnz\scheduler\Task;
 use webtoolsnz\scheduler\TaskRunner;
 use Yii;
 use yii\base\InvalidParamException;
@@ -23,11 +24,6 @@ use yii\helpers\Console;
  */
 class SchedulerController extends Controller
 {
-    /**
-     * @var \webtoolsnz\scheduler\Module
-     */
-    public $module;
-
     /**
      * Force pending tasks to run.
      * @var bool
@@ -74,12 +70,20 @@ class SchedulerController extends Controller
     }
 
     /**
+     * @return \webtoolsnz\scheduler\Module
+     */
+    private function getScheduler()
+    {
+        return Yii::$app->getModule('scheduler');
+    }
+
+    /**
      * List all tasks
      */
     public function actionIndex()
     {
         // Update task index
-        $this->module->getTasks();
+        $this->getScheduler()->getTasks();
         $models = SchedulerTask::find()->all();
 
         echo $this->ansiFormat('Scheduled Tasks', Console::UNDERLINE).PHP_EOL;
@@ -104,17 +108,12 @@ class SchedulerController extends Controller
      */
     public function actionRunAll()
     {
-        $tasks = $this->module->getTasks();
+        $tasks = $this->getScheduler()->getTasks();
 
         echo 'Running Tasks:'.PHP_EOL;
 
         foreach ($tasks as $task) {
-            echo sprintf("\tRunning %s...", $task->getName());
-            $runner = new TaskRunner();
-            $runner->setTask($task);
-            $runner->setLog(new SchedulerLog());
-            $runner->runTask($this->force);
-            echo $runner->error ? 'error' : 'done'.PHP_EOL;
+            $this->runTask($task);
         }
         echo PHP_EOL;
     }
@@ -128,17 +127,29 @@ class SchedulerController extends Controller
             throw new InvalidParamException('taskName must be specified');
         }
 
-        $task = $this->module->loadTask($this->taskName);
+        $task = $this->getScheduler()->loadTask($this->taskName);
 
         if (!$task) {
             throw new InvalidParamException('Invalid taskName');
         }
 
+        $this->runTask($task);
+    }
+
+    /**
+     * @param Task $task
+     */
+    private function runTask(Task $task)
+    {
         echo sprintf("\tRunning %s...", $task->getName());
-        $runner = new TaskRunner();
-        $runner->setTask($task);
-        $runner->setLog(new SchedulerLog());
-        $runner->runTask($this->force);
-        echo $runner->error ? 'error' : 'done'.PHP_EOL;
+        if ($task->shouldRun($this->force)) {
+            $runner = new TaskRunner();
+            $runner->setTask($task);
+            $runner->setLog(new SchedulerLog());
+            $runner->runTask($this->force);
+            echo $runner->error ? 'error' : 'done'.PHP_EOL;
+        } else {
+            echo "Task is not due, use --force to run anyway".PHP_EOL;
+        }
     }
 }
