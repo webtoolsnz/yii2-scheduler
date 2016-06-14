@@ -1,9 +1,11 @@
 <?php
 namespace webtoolsnz\scheduler;
 
+use webtoolsnz\scheduler\models\SchedulerLog;
 use Yii;
 use yii\base\BootstrapInterface;
 use webtoolsnz\scheduler\models\SchedulerTask;
+use yii\helpers\ArrayHelper;
 
 /**
  * Class Module
@@ -29,7 +31,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-        Yii::setAlias('@scheduler', dirname(__DIR__).'/src');
+        Yii::setAlias('@scheduler', dirname(__DIR__) . DIRECTORY_SEPARATOR . 'src');
 
         if ($app instanceof \yii\console\Application && !isset($app->controllerMap[$this->id])) {
             $app->controllerMap[$this->id] = [
@@ -64,10 +66,30 @@ class Module extends \yii\base\Module implements BootstrapInterface
             if (preg_match('/^[a-zA-Z0-9_]*Task$/', $className)) {
                 $tasks[] = $this->loadTask($className);
             }
-
         }
 
+        $this->cleanTasks($tasks);
+
         return $tasks;
+    }
+
+    /**
+     * Removes any records of tasks that no longer exist.
+     *
+     * @param Task[] $tasks
+     */
+    public function cleanTasks($tasks)
+    {
+        $currentTasks = ArrayHelper::map($tasks, function ($task) {
+            return $task->getName();
+        }, 'description');
+
+        foreach (SchedulerTask::find()->indexBy('name')->all() as $name => $task) { /* @var SchedulerTask $task */
+            if (!array_key_exists($name, $currentTasks)) {
+                SchedulerLog::deleteAll(['scheduler_task_id' => $task->id]);
+                $task->delete();
+            }
+        }
     }
 
     /**
