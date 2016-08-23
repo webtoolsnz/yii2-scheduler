@@ -1,6 +1,7 @@
 <?php
 namespace webtoolsnz\scheduler;
 
+use webtoolsnz\scheduler\events\TaskEvent;
 use webtoolsnz\scheduler\models\SchedulerLog;
 use webtoolsnz\scheduler\models\SchedulerTask;
 
@@ -12,6 +13,7 @@ use webtoolsnz\scheduler\models\SchedulerTask;
  */
 class TaskRunner extends \yii\base\Component
 {
+
     /**
      * Indicates whether an error occured during the executing of the task.
      * @var bool
@@ -76,6 +78,11 @@ class TaskRunner extends \yii\base\Component
         $task = $this->getTask();
 
         if ($task->shouldRun($forceRun)) {
+            $event = new TaskEvent([
+                'task' => $task,
+                'success' => true,
+            ]);
+            $this->trigger(Task::EVENT_BEFORE_RUN, $event);
             $task->start();
             ob_start();
             try {
@@ -88,8 +95,12 @@ class TaskRunner extends \yii\base\Component
                 $task->stop();
             } catch (\Exception $e) {
                 $this->running = false;
+                $task->exception = $e;
+                $event->exception = $e;
+                $event->success = false;
                 $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
             }
+            $this->trigger(Task::EVENT_AFTER_RUN, $event);
         }
         $task->getModel()->save();
         $this->errorTearDown();

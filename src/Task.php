@@ -13,6 +13,16 @@ use Cron\CronExpression;
  */
 abstract class Task extends \yii\base\Component
 {
+    const EVENT_BEFORE_RUN = 'TaskBeforeRun';
+    const EVENT_AFTER_RUN = 'TaskAfterRun';
+
+    /**
+     * Exception raised during run (if any)
+     *
+     * @var \Exception|null
+     */
+    public $exception;
+
     /**
      * Brief description of the task.
      *

@@ -128,6 +128,35 @@ In order to have your tasks run automatically simply setup a crontab like so
 */5 * * * * admin php /path/to/my/app/yii scheduler/run-all > /dev/null &
 ```
 
+### Events & Errors
+
+Events are thrown before and running individual tasks as well as at a global level for multiple tasks
+
+Task Level
+
+```php
+Event::on(AlphabetTask::className(), AlphabetTask::EVENT_BEFORE_RUN, function ($event) {
+    Yii::trace($event->task->className . ' is about to run');
+});
+Event::on(AlphabetTask::className(), AlphabetTask::EVENT_AFTER_RUN, function ($event) {
+    Yii::trace($event->task->className . ' just ran '.($event->success ? 'successfully' : 'and failed'));
+});
+```
+
+or at the global level, to throw errors in `/yii`
+
+```php
+$application->on(\webtoolsnz\scheduler\events\SchedulerEvent::EVENT_AFTER_RUN, function ($event) {
+    if (!$event->success) {
+        foreach($event->exceptions as $exception) {
+            throw $exception;
+        }
+    }
+});
+```
+
+You could throw the exceptions at the task level, however this will prevent further tasks from running.
+
 ## License
 
 The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.

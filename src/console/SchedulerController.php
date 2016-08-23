@@ -2,6 +2,7 @@
 
 namespace webtoolsnz\scheduler\console;
 
+use webtoolsnz\scheduler\events\SchedulerEvent;
 use webtoolsnz\scheduler\models\base\SchedulerLog;
 use webtoolsnz\scheduler\models\SchedulerTask;
 use webtoolsnz\scheduler\Task;
@@ -111,10 +112,19 @@ class SchedulerController extends Controller
         $tasks = $this->getScheduler()->getTasks();
 
         echo 'Running Tasks:'.PHP_EOL;
-
+        $event = new SchedulerEvent([
+            'tasks' => $tasks,
+            'success' => true,
+        ]);
+        $this->trigger(SchedulerEvent::EVENT_BEFORE_RUN, $event);
         foreach ($tasks as $task) {
             $this->runTask($task);
+            if ($task->exception) {
+                $event->success = false;
+                $event->exceptions[] = $task->exception;
+            }
         }
+        $this->trigger(SchedulerEvent::EVENT_AFTER_RUN, $event);
         echo PHP_EOL;
     }
 
@@ -127,13 +137,23 @@ class SchedulerController extends Controller
             throw new InvalidParamException('taskName must be specified');
         }
 
+        /* @var Task $task */
         $task = $this->getScheduler()->loadTask($this->taskName);
 
         if (!$task) {
             throw new InvalidParamException('Invalid taskName');
         }
-
+        $event = new SchedulerEvent([
+            'tasks' => [$task],
+            'success' => true,
+        ]);
+        $this->trigger(SchedulerEvent::EVENT_BEFORE_RUN, $event);
         $this->runTask($task);
+        if ($task->exception) {
+            $event->success = false;
+            $event->exceptions = [$task->exception];
+        }
+        $this->trigger(SchedulerEvent::EVENT_AFTER_RUN, $event);
     }
 
     /**
