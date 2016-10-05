@@ -23,7 +23,7 @@
     "webtoolsnz/yii2-widgets": "*"
   },
   "require-dev": {
-    "guzzlehttp/guzzle": "~5.0|~4.0|~6.0",
+    "guzzlehttp/guzzle": "~5.0|~4.0",
     "yiisoft/yii2-codeception": "*",
     "codeception/codeception": "*",
     "codeception/specify": "*",
