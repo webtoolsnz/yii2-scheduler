@@ -20,7 +20,20 @@ $ composer require webtoolsnz/yii2-scheduler
 
 Now that the  package has been installed you need to configure the module in your application
 
-The `bootstrap` and `modules` sections in the `config/console.php` and `config/web.php` files will need to be updated to include the `scheduler` module.
+The `config/console.php` file should be updated to reflect the changes below
+~~~php
+    'bootstrap' => ['log', 'scheduler'],
+    'modules' => [
+        'scheduler' => ['class' => 'webtoolsnz\scheduler\Module'],
+    ],
+    'components' => [
+        'errorHandler' => [
+            'class' => 'webtoolsnz\scheduler\ErrorHandler'
+        ]
+    ]
+~~~
+
+To implement the GUI for scheduler also add the following to your `config/web.php`
 ~~~php
     'bootstrap' => ['log', 'scheduler'],
     'modules' => [
