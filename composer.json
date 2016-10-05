@@ -18,11 +18,13 @@
     }
   ],
   "require": {
-    "yiisoft/yii2": "^2.0.6",
+    "yiisoft/yii2": "^2.0.9",
     "mtdowling/cron-expression": "~1.0",
     "webtoolsnz/yii2-widgets": "*"
   },
   "require-dev": {
+    "guzzlehttp/guzzle": "~5.0|~4.0",
+    "phpdocumentor/reflection-docblock" : "^2.0",
     "yiisoft/yii2-codeception": "*",
     "codeception/codeception": "*",
     "codeception/specify": "*",
