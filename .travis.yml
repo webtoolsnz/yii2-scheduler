@@ -8,12 +8,10 @@ php:
 
 install:
   - composer self-update
-  - composer install
+  - composer global require "fxp/composer-asset-plugin"
+  - travis_retry composer install --no-interaction --prefer-source --dev
 
 before_script:
-  - travis_retry composer self-update
-  - travis_retry composer global require "fxp/composer-asset-plugin"
-  - travis_retry composer install --no-interaction --prefer-source --dev
   - travis_retry mysql -e "CREATE DATABASE scheduler_test;"
   - php tests/_app/yii migrate/up --interactive=0 --migrationPath=src/migrations/
   - vendor/bin/codecept build
