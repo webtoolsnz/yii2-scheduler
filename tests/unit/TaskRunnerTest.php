@@ -2,13 +2,13 @@
 
 namespace webtoolsnz\scheduler\tests;
 
+use Codeception\Util\Stub;
 use \webtoolsnz\scheduler\tests\tasks\AlphabetTask;
 use \webtoolsnz\scheduler\TaskRunner;
 use \webtoolsnz\scheduler\models\SchedulerTask;
 use \webtoolsnz\scheduler\models\SchedulerLog;
 use webtoolsnz\scheduler\tests\tasks\ErrorTask;
 use \yii\codeception\TestCase;
-use AspectMock\Test as test;
 
 class TaskRunnerTest extends TestCase
 {
