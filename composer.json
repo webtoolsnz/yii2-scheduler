@@ -24,6 +24,7 @@
   },
   "require-dev": {
     "guzzlehttp/guzzle": "~5.0|~4.0",
+    "phpdocumentor/reflection-docblock" : "^2.0",
     "yiisoft/yii2-codeception": "*",
     "codeception/codeception": "*",
     "codeception/specify": "*",
