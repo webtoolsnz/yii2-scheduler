@@ -26,6 +26,11 @@ The `bootstrap` and `modules` sections in the `config/console.php` and `config/w
     'modules' => [
         'scheduler' => ['class' => 'webtoolsnz\scheduler\Module'],
     ],
+    'components' => [
+        'errorHandler' => [
+            'class' => 'webtoolsnz\scheduler\ErrorHandler'
+        ]
+    ]
 ~~~
 
 After the configuration files have been updated, a `tasks` directory will need to be created in the root of your project.

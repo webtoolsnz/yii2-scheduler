@@ -1,6 +1,7 @@
 <?php
 namespace webtoolsnz\scheduler;
 
+use Yii;
 use webtoolsnz\scheduler\events\TaskEvent;
 use webtoolsnz\scheduler\models\SchedulerLog;
 use webtoolsnz\scheduler\models\SchedulerTask;
@@ -74,7 +75,6 @@ class TaskRunner extends \yii\base\Component
      */
     public function runTask($forceRun = false)
     {
-        $this->errorSetup();
         $task = $this->getTask();
 
         if ($task->shouldRun($forceRun)) {
@@ -87,6 +87,7 @@ class TaskRunner extends \yii\base\Component
             ob_start();
             try {
                 $this->running = true;
+                $this->shutdownHandler();
                 $task->run();
                 $this->running = false;
                 $output = ob_get_contents();
@@ -103,33 +104,19 @@ class TaskRunner extends \yii\base\Component
             $this->trigger(Task::EVENT_AFTER_RUN, $event);
         }
         $task->getModel()->save();
-        $this->errorTearDown();
     }
 
     /**
-     * Register custom error handlers so any errors that occur in a task will be captured and
-     * logged against the task, and not prevent other tasks from running.
+     * If the yii error handler has been overridden with `\webtoolsnz\scheduler\ErrorHandler`,
+     * pass it this instance of TaskRunner, so it can update the state of tasks in the event of a fatal error.
      */
-    public function errorSetup()
+    public function shutdownHandler()
     {
-        /* Do nothing - trust Yii's error handling will do the job
-        set_error_handler(function ($errorNumber, $errorText, $errorFile, $errorLine) {
-            throw new \ErrorException($errorText, 0, $errorNumber, $errorFile, $errorLine);
-        });
+        $errorHandler = Yii::$app->getErrorHandler();
 
-        set_exception_handler(function ($e) {
-            /* @var \Exception $e * /
-            $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
-        });*/
-    }
-
-    /**
-     * Restore the default error handlers.
-     */
-    public function errorTearDown()
-    {
-        /*restore_error_handler();
-        restore_exception_handler();*/
+        if ($errorHandler instanceof \webtoolsnz\scheduler\ErrorHandler) {
+            Yii::$app->getErrorHandler()->taskRunner = $this;
+        }
     }
 
     /**
@@ -146,7 +133,7 @@ class TaskRunner extends \yii\base\Component
         echo sprintf('ERROR MESSAGE: %s %s', $message, PHP_EOL);
 
         // if the failed task was mid transaction, rollback so we can save.
-        if (null !==($tx = \Yii::$app->db->getTransaction())) {
+        if (null !== ($tx = \Yii::$app->db->getTransaction())) {
             $tx->rollBack();
         }
 
