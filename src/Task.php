@@ -3,6 +3,7 @@
 
 namespace webtoolsnz\scheduler;
 
+use webtoolsnz\scheduler\events\TaskEvent;
 use webtoolsnz\scheduler\models\SchedulerTask;
 use yii\helpers\StringHelper;
 use Cron\CronExpression;
@@ -15,6 +16,11 @@ abstract class Task extends \yii\base\Component
 {
     const EVENT_BEFORE_RUN = 'TaskBeforeRun';
     const EVENT_AFTER_RUN = 'TaskAfterRun';
+
+    /**
+     * @var bool create a database lock to ensure the task only runs once
+     */
+    public $databaseLock = true;
 
     /**
      * Exception raised during run (if any)
@@ -55,6 +61,29 @@ abstract class Task extends \yii\base\Component
      * @var null|SchedulerTask
      */
     private $_model;
+
+    public function init()
+    {
+        parent::init();
+
+        $lockName = 'TaskLock'.\yii\helpers\Inflector::camelize(self::className());
+        \yii\base\Event::on(self::className(), self::EVENT_BEFORE_RUN, function ($event) use ($lockName) {
+            /* @var $event TaskEvent */
+            $db = \Yii::$app->db;
+            $result = $db->createCommand("GET_LOCK(:lockname, 1)", [':lockname' => $lockName])->queryScalar();
+
+            if (!$result) {
+                // we didn't get the lock which means the task is still running
+                $event->cancel = true;
+            }
+        });
+        \yii\base\Event::on(self::className(), self::EVENT_AFTER_RUN, function ($event) use ($lockName) {
+            // release the lock
+            /* @var $event TaskEvent */
+            $db = \Yii::$app->db;
+            $db->createCommand("RELEASE_LOCK(:lockname, 1)", [':lockname' => $lockName])->queryScalar();
+        });
+    }
 
     /**
      * The main method that gets invoked whenever a task is ran, any errors that occur

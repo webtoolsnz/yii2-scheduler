@@ -11,4 +11,6 @@ class TaskEvent extends Event
     public $task;
     public $exception;
     public $success;
+
+    public $cancel = false;
 }

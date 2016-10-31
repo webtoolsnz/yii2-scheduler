@@ -83,24 +83,26 @@ class TaskRunner extends \yii\base\Component
                 'success' => true,
             ]);
             $this->trigger(Task::EVENT_BEFORE_RUN, $event);
-            $task->start();
-            ob_start();
-            try {
-                $this->running = true;
-                $task->run();
-                $this->running = false;
-                $output = ob_get_contents();
-                ob_end_clean();
-                $this->log($output);
-                $task->stop();
-            } catch (\Exception $e) {
-                $this->running = false;
-                $task->exception = $e;
-                $event->exception = $e;
-                $event->success = false;
-                $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
+            if (!$event->cancel) {
+                $task->start();
+                ob_start();
+                try {
+                    $this->running = true;
+                    $task->run();
+                    $this->running = false;
+                    $output = ob_get_contents();
+                    ob_end_clean();
+                    $this->log($output);
+                    $task->stop();
+                } catch (\Exception $e) {
+                    $this->running = false;
+                    $task->exception = $e;
+                    $event->exception = $e;
+                    $event->success = false;
+                    $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
+                }
+                $this->trigger(Task::EVENT_AFTER_RUN, $event);
             }
-            $this->trigger(Task::EVENT_AFTER_RUN, $event);
         }
         $task->getModel()->save();
         $this->errorTearDown();
