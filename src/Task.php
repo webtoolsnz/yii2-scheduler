@@ -171,7 +171,7 @@ abstract class Task extends \yii\base\Component
             $overdue = true;
         }
 
-        return ((!$isRunning || $overdue) && $model->active && ($isDue || $forceRun));
+        return ($model->active && ((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue));
     }
 
 }
