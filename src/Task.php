@@ -54,8 +54,9 @@ abstract class Task extends \yii\base\Component
      * How many seconds after due date to wait until the task becomes overdue.
      *
      * @var int
+     * @default 6 hours
      */
-    public $overdueThreshold = 3600;
+    public $overdueThreshold = 21600;
 
     /**
      * @var null|SchedulerTask
