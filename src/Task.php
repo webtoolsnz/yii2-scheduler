@@ -51,7 +51,8 @@ abstract class Task extends \yii\base\Component
     public $active = true;
 
     /**
-     * How many seconds after due date to wait until the task becomes overdue.
+     * How many seconds after due date to wait until the task becomes overdue and is re-run.
+     * This should be set to at least 2x the amount of time the task takes to run as the task will be restarted.
      *
      * @var int
      */
@@ -166,8 +167,12 @@ abstract class Task extends \yii\base\Component
         $model = $this->getModel();
         $isDue = in_array($model->status_id, [SchedulerTask::STATUS_DUE, SchedulerTask::STATUS_OVERDUE, SchedulerTask::STATUS_ERROR]);
         $isRunning = $model->status_id == SchedulerTask::STATUS_RUNNING;
+        $overdue = false;
+        if((strtotime($model->started_at) + $this->overdueThreshold) > strtotime("now")) {
+            $overdue = true;
+        }
 
-        return (!$isRunning && $model->active && ($isDue || $forceRun));
+        return ($model->active && ((!$isRunning && ($isDue || $forceRun)) || ($isRunning && $overdue)));
     }
 
 }
