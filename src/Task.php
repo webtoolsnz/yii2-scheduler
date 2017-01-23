@@ -51,7 +51,8 @@ abstract class Task extends \yii\base\Component
     public $active = true;
 
     /**
-     * How many seconds after due date to wait until the task becomes overdue.
+     * How many seconds after due date to wait until the task becomes overdue and is re-run.
+     * This should be set to at least 2x the amount of time the task takes to run as the task will be restarted.
      *
      * @var int
      */
