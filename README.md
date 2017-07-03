@@ -29,8 +29,40 @@ The `config/console.php` file should be updated to reflect the changes below
     'components' => [
         'errorHandler' => [
             'class' => 'webtoolsnz\scheduler\ErrorHandler'
-        ]
+        ],
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                [
+                    'class' => 'yii\log\EmailTarget',
+                    'mailer' =>'mailer',
+                    'levels' => ['error', 'warning'],
+                    'message' => [
+                        'to' => ['wt.alerts@webtools.co.nz'],
+                        'from' => [$params['adminEmail']],
+                        'subject' => 'Scheduler Error - ####SERVERNAME####'
+                    ],
+                    'except' => [
+                    ],
+                ],
+            ],
+        ],
     ]
+~~~
+
+also add this to the top of your `config/console.php` file
+~~~php
+\yii\base\Event::on(
+    \webtoolsnz\scheduler\console\SchedulerController::className(),
+    \webtoolsnz\scheduler\events\SchedulerEvent::EVENT_AFTER_RUN,
+    function ($event) {
+        if (!$event->success) {
+            foreach($event->exceptions as $exception) {
+                throw $exception;
+            }
+        }
+    }
+);
 ~~~
 
 To implement the GUI for scheduler also add the following to your `config/web.php`
