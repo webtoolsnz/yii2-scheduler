@@ -7,32 +7,36 @@ class m150510_090513_Scheduler extends Migration
 {
     public function safeUp()
     {
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
         $this->createTable('scheduler_log', [
-            'id'=> Schema::TYPE_PK.'',
-            'scheduler_task_id'=> Schema::TYPE_INTEGER.'(11) NOT NULL',
-            'started_at'=> Schema::TYPE_TIMESTAMP.' NOT NULL DEFAULT CURRENT_TIMESTAMP',
-            'ended_at'=> Schema::TYPE_TIMESTAMP.' NOT NULL DEFAULT "0000-00-00 00:00:00"',
-            'output'=> Schema::TYPE_TEXT.' NOT NULL',
-            'error'=> Schema::TYPE_BOOLEAN.'(1) NOT NULL DEFAULT "0"',
-        ], 'ENGINE=InnoDB');
+            'id' => $this->primaryKey(),
+            'scheduler_task_id' => $this->integer()->notNull(),
+            'started_at' => Schema::TYPE_TIMESTAMP . ' NOT NULL DEFAULT CURRENT_TIMESTAMP',
+            'ended_at' => Schema::TYPE_TIMESTAMP . ' NOT NULL DEFAULT CURRENT_TIMESTAMP',
+            'output' => $this->text()->notNull(),
+            'error' => $this->boolean()->notNull()->defaultValue(false),
+        ], $tableOptions);
 
-        $this->createIndex('id_UNIQUE', 'scheduler_log','id',1);
-        $this->createIndex('fk_table1_scheduler_task_idx', 'scheduler_log','scheduler_task_id',0);
+//        $this->createIndex('id_UNIQUE', 'scheduler_log', 'id', true);
+        $this->createIndex('fk_table1_scheduler_task_idx', 'scheduler_log', 'scheduler_task_id', false);
 
         $this->createTable('scheduler_task', [
-            'id'=> Schema::TYPE_PK.'',
-            'name'=> Schema::TYPE_STRING.'(45) NOT NULL',
-            'schedule'=> Schema::TYPE_STRING.'(45) NOT NULL',
-            'description'=> Schema::TYPE_TEXT.' NOT NULL',
-            'status_id'=> Schema::TYPE_INTEGER.'(11) NOT NULL',
-            'started_at'=> Schema::TYPE_TIMESTAMP.' NULL DEFAULT NULL',
-            'last_run'=> Schema::TYPE_TIMESTAMP.' NULL DEFAULT NULL',
-            'next_run'=> Schema::TYPE_TIMESTAMP.' NULL DEFAULT NULL',
-            'active'=> Schema::TYPE_BOOLEAN.'(1) NOT NULL DEFAULT "0"',
-        ], 'ENGINE=InnoDB');
+            'id' => $this->primaryKey(),
+            'name' => $this->string()->notNull(),
+            'schedule' => $this->string()->notNull(),
+            'description' => $this->text()->notNull(),
+            'status_id' => $this->integer()->notNull(),
+            'started_at' => $this->timestamp(),
+            'last_run' => $this->timestamp(),
+            'next_run' => $this->timestamp(),
+            'active' => $this->boolean()->notNull()->defaultValue(false),
+        ], $tableOptions);
 
-        $this->createIndex('id_UNIQUE', 'scheduler_task','id',1);
-        $this->createIndex('name_UNIQUE', 'scheduler_task','name',1);
+//        $this->createIndex('id_UNIQUE', 'scheduler_task', 'id', true);
+        $this->createIndex('name_UNIQUE', 'scheduler_task', 'name', true);
         $this->addForeignKey('fk_scheduler_log_scheduler_task_id', 'scheduler_log', 'scheduler_task_id', 'scheduler_task', 'id');
     }
 
