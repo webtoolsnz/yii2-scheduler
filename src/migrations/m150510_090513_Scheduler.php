@@ -30,8 +30,8 @@ class m150510_090513_Scheduler extends Migration
             'description' => $this->text()->notNull(),
             'status_id' => $this->integer()->notNull(),
             'started_at' => $this->timestamp(),
-            'last_run' => $this->timestamp(),
-            'next_run' => $this->timestamp(),
+            'last_run' => $this->timestamp()->defaultValue(null),
+            'next_run' => $this->timestamp()->defaultValue(null),
             'active' => $this->boolean()->notNull()->defaultValue(false),
         ], $tableOptions);
 
