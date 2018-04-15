@@ -74,7 +74,7 @@ $this->params['breadcrumbs'][] = $model->__toString();
                     'attribute' => 'started_at',
                     'format' => 'raw',
                     'value' => function ($m) {
-                        return Html::a(Yii::$app->getFormatter()->asDatetime($m->started_at), ['view-log', 'id' => $m->id]);
+                        return Html::a($m->started_at, ['view-log', 'id' => $m->id]);
                     }
                 ],
                 'ended_at:datetime',
