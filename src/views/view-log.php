@@ -26,10 +26,10 @@ $this->params['breadcrumbs'][] = $model->__toString();
             <dd><?= Html::encode($model->schedulerTask->description) ?></dd>
 
             <dt><?= $model->getAttributeLabel('started_at') ?></dt>
-            <dd><?= Yii::$app->formatter->asDatetime($model->started_at) ?></dd>
+            <dd><?= $model->started_at ?></dd>
 
             <dt><?= $model->getAttributeLabel('ended_at') ?></dt>
-            <dd><?= Yii::$app->formatter->asDatetime($model->ended_at) ?></dd>
+            <dd><?= $model->ended_at ?></dd>
 
             <dt>Duration</dt>
             <dd><?= $model->getDuration() ?></dd>
