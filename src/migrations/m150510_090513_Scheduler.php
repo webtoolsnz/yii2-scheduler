@@ -1,41 +1,47 @@
 <?php
+
 use yii\db\Schema;
 use yii\db\Migration;
+
 class m150510_090513_Scheduler extends Migration
 {
+    const TABLE_SCHEDULER_LOG = 'scheduler_log';
+    const TABLE_SCHEDULER_TASK = 'scheduler_task';
+
     public function safeUp()
     {
-        $this->createTable('scheduler_log', [
-            'id'=> Schema::TYPE_PK.'',
-            'scheduler_task_id'=> Schema::TYPE_INTEGER.'(11) NOT NULL',
-            'started_at'=> Schema::TYPE_TIMESTAMP.' NOT NULL DEFAULT CURRENT_TIMESTAMP',
-            'ended_at'=> Schema::TYPE_TIMESTAMP.'  NULL ',
-            'output'=> Schema::TYPE_TEXT.' NOT NULL',
-            'error'=> Schema::TYPE_BOOLEAN.'(1) NOT NULL DEFAULT "0"',
-        ], 'ENGINE=InnoDB');
-        $this->createIndex('id_UNIQUE', 'scheduler_log','id',1);
-        $this->createIndex('fk_table1_scheduler_task_idx', 'scheduler_log','scheduler_task_id',0);
-        $this->createTable('scheduler_task', [
-            'id'=> Schema::TYPE_PK.'',
-            'name'=> Schema::TYPE_STRING.'(45) NOT NULL',
-            'schedule'=> Schema::TYPE_STRING.'(45) NOT NULL',
-            'description'=> Schema::TYPE_TEXT.' NOT NULL',
-            'status_id'=> Schema::TYPE_INTEGER.'(11) NOT NULL',
-            'started_at'=> Schema::TYPE_TIMESTAMP.' NULL DEFAULT NULL',
-            'last_run'=> Schema::TYPE_TIMESTAMP.' NULL DEFAULT NULL',
-            'next_run'=> Schema::TYPE_TIMESTAMP.' NULL DEFAULT NULL',
-            'active'=> Schema::TYPE_BOOLEAN.'(1) NOT NULL DEFAULT "0"',
-        ], 'ENGINE=InnoDB');
-        $this->createIndex('id_UNIQUE', 'scheduler_task','id',1);
-        $this->createIndex('name_UNIQUE', 'scheduler_task','name',1);
-        $this->addForeignKey('fk_scheduler_log_scheduler_task_id', 'scheduler_log', 'scheduler_task_id', 'scheduler_task', 'id');
+        $tableOptions = null;
+        if ($this->db->driverName === 'mysql') {
+            $tableOptions = 'CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE=InnoDB';
+        }
+
+        $this->createTable(self::TABLE_SCHEDULER_LOG, [
+            'id' => $this->primaryKey(),
+            'scheduler_task_id' => $this->integer()->notNull(),
+            'started_at' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),
+            'ended_at' => $this->timestamp()->defaultValue(null),
+            'output' => $this->text()->notNull(),
+            'error' => $this->boolean()->defaultValue(false),
+        ], $tableOptions);
+
+        $this->createTable(self::TABLE_SCHEDULER_TASK, [
+            'id' => $this->primaryKey(),
+            'name' => $this->string()->notNull(),
+            'schedule' => $this->string()->notNull(),
+            'description' => $this->text()->notNull(),
+            'status_id' => $this->integer()->notNull(),
+            'started_at' => $this->timestamp()->null()->defaultValue(null),
+            'last_run' => $this->timestamp()->null()->defaultValue(null),
+            'next_run' => $this->timestamp()->null()->defaultValue(null),
+            'active' => $this->boolean()->notNull()->defaultValue(false),
+        ], $tableOptions);
+        $this->addForeignKey('fk_scheduler_log_scheduler_task_id', self::TABLE_SCHEDULER_LOG, 'scheduler_task_id', self::TABLE_SCHEDULER_TASK, 'id');
     }
+
     public function safeDown()
     {
-        $this->delete('scheduler_log');
-        $this->delete('scheduler_task');
-        $this->dropForeignKey('fk_scheduler_log_scheduler_task_id', 'scheduler_log');
-        $this->dropTable('scheduler_log');
-        $this->dropTable('scheduler_task');
+        $this->dropForeignKey('fk_scheduler_log_scheduler_task_id', self::TABLE_SCHEDULER_LOG);
+        $this->dropTable(self::TABLE_SCHEDULER_LOG);
+        $this->dropTable(self::TABLE_SCHEDULER_TASK);
     }
 }
