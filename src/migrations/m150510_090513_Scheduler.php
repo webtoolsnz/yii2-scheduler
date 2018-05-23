@@ -5,8 +5,8 @@ use yii\db\Migration;
 
 class m150510_090513_Scheduler extends Migration
 {
-    const TABLE_SCHEDULER_LOG = 'scheduler_log';
-    const TABLE_SCHEDULER_TASK = 'scheduler_task';
+    const TABLE_SCHEDULER_LOG = '{{%scheduler_log}}';
+    const TABLE_SCHEDULER_TASK = '{{%scheduler_task}}';
 
     public function safeUp()
     {
