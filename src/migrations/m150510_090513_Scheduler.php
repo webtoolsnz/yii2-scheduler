@@ -11,7 +11,7 @@ class m150510_090513_Scheduler extends Migration
             'id'=> Schema::TYPE_PK.'',
             'scheduler_task_id'=> Schema::TYPE_INTEGER.'(11) NOT NULL',
             'started_at'=> Schema::TYPE_TIMESTAMP.' NOT NULL DEFAULT CURRENT_TIMESTAMP',
-            'ended_at'=> Schema::TYPE_TIMESTAMP.' NOT NULL DEFAULT "0000-00-00 00:00:00"',
+            'ended_at'=> Schema::TYPE_TIMESTAMP.' NULL DEFAULT NULL',
             'output'=> Schema::TYPE_TEXT.' NOT NULL',
             'error'=> Schema::TYPE_BOOLEAN.'(1) NOT NULL DEFAULT "0"',
         ], 'ENGINE=InnoDB');
