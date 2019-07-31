@@ -14,13 +14,12 @@ class ErrorHandler extends \yii\console\ErrorHandler
     public $taskRunner;
 
     /**
-     *  We need to override the register method to inject our own shutdown handler before the internal yii handler
-     *  is registered.
+     *  We need to override the register method to register our own shutdown handler and prevent yii from
+     *  intercepting our error handler.
      */
     public function register()
     {
         register_shutdown_function([$this, 'schedulerShutdownHandler']);
-        return parent::register();
     }
 
     public function schedulerShutdownHandler()
@@ -29,5 +28,8 @@ class ErrorHandler extends \yii\console\ErrorHandler
         if ($this->taskRunner && E_ERROR == $error['type']) {
             $this->taskRunner->handleError($error['type'], $error['message'], $error['file'], $error['line']);
         }
+
+        // Allow yiis error handler to take over and handle logging
+        parent::handleFatalError();
     }
 }
