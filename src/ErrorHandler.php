@@ -2,7 +2,6 @@
 
 namespace webtoolsnz\scheduler;
 
-use webtoolsnz\scheduler\events\TaskEvent;
 use yii\base\ErrorException;
 
 /**

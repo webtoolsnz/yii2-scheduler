@@ -1,7 +1,6 @@
 <?php
 namespace webtoolsnz\scheduler;
 
-use SebastianBergmann\CodeCoverage\Report\PHP;
 use Yii;
 use webtoolsnz\scheduler\events\TaskEvent;
 use webtoolsnz\scheduler\models\SchedulerLog;
