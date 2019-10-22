@@ -1,10 +1,13 @@
 <?php
 namespace webtoolsnz\scheduler;
 
+use SebastianBergmann\CodeCoverage\Report\PHP;
 use Yii;
 use webtoolsnz\scheduler\events\TaskEvent;
 use webtoolsnz\scheduler\models\SchedulerLog;
 use webtoolsnz\scheduler\models\SchedulerTask;
+use yii\base\ErrorException;
+use yii\base\Exception;
 
 /**
  * Class TaskRunner
@@ -100,7 +103,7 @@ class TaskRunner extends \yii\base\Component
                     $task->exception = $e;
                     $event->exception = $e;
                     $event->success = false;
-                    $this->handleError($e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine());
+                    $this->handleError($e);
                 }
                 $this->trigger(Task::EVENT_AFTER_RUN, $event);
             }
@@ -122,17 +125,16 @@ class TaskRunner extends \yii\base\Component
     }
 
     /**
-     * @param $code
-     * @param $message
-     * @param $file
-     * @param $lineNumber
+     * @param \Exception|ErrorException|Exception $exception
      */
-    public function handleError($code, $message, $file, $lineNumber)
+    public function handleError(\Exception $exception)
     {
-        echo sprintf('ERROR: %s %s', $code, PHP_EOL);
-        echo sprintf('ERROR FILE: %s %s', $file, PHP_EOL);
-        echo sprintf('ERROR LINE: %s %s', $lineNumber, PHP_EOL);
-        echo sprintf('ERROR MESSAGE: %s %s', $message, PHP_EOL);
+        echo sprintf(
+            "%s: %s \n\n Stack Trace: \n %s",
+            $exception->getName(),
+            $exception->getMessage(),
+            $exception->getTraceAsString()
+        );
 
         // if the failed task was mid transaction, rollback so we can save.
         if (null !== ($tx = \Yii::$app->db->getTransaction())) {
@@ -146,6 +148,13 @@ class TaskRunner extends \yii\base\Component
         $this->log($output);
         $this->getTask()->getModel()->status_id = SchedulerTask::STATUS_ERROR;
         $this->getTask()->stop();
+
+        $this->getTask()->trigger(Task::EVENT_FAILURE, new TaskEvent([
+            'task' => $this->getTask(),
+            'output' => $output,
+            'success' => false,
+            'exception' => $exception,
+        ]));
     }
 
     /**

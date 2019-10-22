@@ -2,12 +2,17 @@
 
 namespace webtoolsnz\scheduler;
 
+use webtoolsnz\scheduler\events\TaskEvent;
+use yii\base\ErrorException;
+
 /**
  * Class ErrorHandler
  * @package webtoolsnz\scheduler
  */
 class ErrorHandler extends \yii\console\ErrorHandler
 {
+    public $memoryReserveSize = 2097152;
+
     /**
      * @var TaskRunner
      */
@@ -25,8 +30,10 @@ class ErrorHandler extends \yii\console\ErrorHandler
     public function schedulerShutdownHandler()
     {
         $error = error_get_last();
+
         if ($this->taskRunner && E_ERROR == $error['type']) {
-            $this->taskRunner->handleError($error['type'], $error['message'], $error['file'], $error['line']);
+            $exception = new ErrorException($error['message'], $error['type'], $error['type'], $error['file'], $error['line']);
+            $this->taskRunner->handleError($exception);
         }
 
         // Allow yiis error handler to take over and handle logging

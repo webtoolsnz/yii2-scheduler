@@ -16,6 +16,7 @@ abstract class Task extends \yii\base\Component
 {
     const EVENT_BEFORE_RUN = 'TaskBeforeRun';
     const EVENT_AFTER_RUN = 'TaskAfterRun';
+    const EVENT_FAILURE = ' TaskFailure';
 
     /**
      * @var bool create a database lock to ensure the task only runs once
