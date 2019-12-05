@@ -130,7 +130,7 @@ class TaskRunner extends \yii\base\Component
     {
         echo sprintf(
             "%s: %s \n\n Stack Trace: \n %s",
-            $exception->getName(),
+            method_exists($exception, 'getName') ? $exception->getName() : get_class($exception),
             $exception->getMessage(),
             $exception->getTraceAsString()
         );
