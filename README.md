@@ -38,7 +38,7 @@ The `config/console.php` file should be updated to reflect the changes below
                     'mailer' =>'mailer',
                     'levels' => ['error', 'warning'],
                     'message' => [
-                        'to' => ['wt.alerts@webtools.co.nz'],
+                        'to' => ['admin@example.com'],
                         'from' => [$params['adminEmail']],
                         'subject' => 'Scheduler Error - ####SERVERNAME####'
                     ],
