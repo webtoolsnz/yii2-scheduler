@@ -30,7 +30,7 @@ class ErrorHandler extends \yii\console\ErrorHandler
     {
         $error = error_get_last();
 
-        if ($this->taskRunner && E_ERROR == $error['type']) {
+        if ($error && $this->taskRunner && E_ERROR == $error['type']) {
             $exception = new ErrorException($error['message'], $error['type'], $error['type'], $error['file'], $error['line']);
             $this->taskRunner->handleError($exception);
         }
