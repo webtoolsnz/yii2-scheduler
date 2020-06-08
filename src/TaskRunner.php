@@ -140,8 +140,12 @@ class TaskRunner extends \yii\base\Component
             $tx->rollBack();
         }
 
-        $output = ob_get_contents();
-        ob_end_clean();
+        $output = '';
+
+        if(ob_get_length() > 0) {
+            $output = ob_get_contents();
+            ob_end_clean();
+        }
 
         $this->error = true;
         $this->log($output);
